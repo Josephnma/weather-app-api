@@ -14,17 +14,21 @@ import java.util.Map;
 public class WeatherServiceImpl implements WeatherService {
 
     @Value("${openweather.api.key}")
-    private String apiKey;
+    public String apiKey;
 
     @Value("${openweather.api.url}")
-    private String apiUrl;
+    public String apiUrl;
 
+    private final RestTemplate restTemplate;
+
+    public WeatherServiceImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;  // Inject RestTemplate
+    }
 
     @Override
     public WeatherResponse getWeather(String city) {
         try {
             String url = String.format(apiUrl, city, apiKey);
-            RestTemplate restTemplate = new RestTemplate();
             var response = restTemplate.getForObject(url, Map.class);
 
             if (response != null) {
@@ -36,7 +40,7 @@ public class WeatherServiceImpl implements WeatherService {
                 weather.setDescription(((Map<String, Object>) ((List<?>) response.get("weather")).get(0)).get("description").toString());
                 return weather;
             }
-            return null;
+            throw new RuntimeException("City not found or API error");
         } catch (HttpClientErrorException e) {
             throw new RuntimeException("City not found or API error");
         }
