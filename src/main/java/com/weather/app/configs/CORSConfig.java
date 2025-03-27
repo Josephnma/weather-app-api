@@ -15,7 +15,7 @@ public class CORSConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://localhost:5173", "https://pynadmin.netlify.app")
+                .allowedOriginPatterns("http://localhost:5173")
                 .allowedMethods("POST", "OPTIONS","GET", "PUT", "DELETE","PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
